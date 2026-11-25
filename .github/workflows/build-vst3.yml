@@ -1,0 +1,27 @@
+name: Build VST3 Plugin
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Configure CMake
+        run: cmake -B build -A x64
+
+      - name: Build ShifuVirtMix VST3
+        run: cmake --build build --config Release --target ShifuVirtMix_VST3
+
+      - name: Upload Windows VST3 Artifact
+        uses: actions/upload-artifact@v5
+        with:
+          name: ShifuVirtMix-Windows-VST3
+          path: build/ShifuVirtMix_artefacts/Release/VST3/ShifuVirtMix.vst3
